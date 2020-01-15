@@ -1,33 +1,28 @@
 import React from "react";
+import { connect } from "react-redux";
 import "../assets/styles/App.scss";
-import Header from "../components/Header";
 import Search from "../components/Search";
 import Categories from "../components/Categories";
 import Carousel from "../components/Carousel";
 import CarouselItem from "../components/CarouselItem";
-import Footer from "../components/Footer";
-import useInitialState from "../hooks/useInitialState";
 
-const API = "http://localhost:3000/initalState";
-
-const App = () => {
-  const { videos } = useInitialState(API);
-
+const Home = ({ myList, trends, originals }) => {
   return (
-    <div className="App">
-      <Header />
-      <Search />
-      {videos.mylist.length > 0 && (
+    <>
+      <Search isHome />
+      {myList.length > 0 && (
         <Categories title="Mi lista">
           <Carousel>
-            <CarouselItem />
+            {myList.map(item => (
+              <CarouselItem key={item.id} {...item} isList />
+            ))}
           </Carousel>
         </Categories>
       )}
 
       <Categories title="Tendencias">
         <Carousel>
-          {videos.trends.map(item => (
+          {trends.map(item => (
             <CarouselItem key={item.id} {...item} />
           ))}
         </Carousel>
@@ -35,15 +30,21 @@ const App = () => {
 
       <Categories title="Originales de Platzi Video">
         <Carousel>
-          {videos.originals.map(item => (
+          {originals.map(item => (
             <CarouselItem key={item.id} {...item} />
           ))}
         </Carousel>
       </Categories>
-
-      <Footer />
-    </div>
+    </>
   );
 };
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    myList: state.myList,
+    trends: state.trends,
+    originals: state.originals
+  };
+};
+
+export default connect(mapStateToProps, null)(Home);

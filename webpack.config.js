@@ -1,17 +1,21 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    publicPath: "/"
   },
   devServer: {
+    historyApiFallback: true,
     open: true,
     hot: true,
-    port: 8080
+    port: 8080,
+    watchContentBase: true
   },
   resolve: {
     extensions: [".js", ".jsx"]
@@ -57,6 +61,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebPackPlugin({
       template: "./public/index.html",
       filename: "./index.html"
